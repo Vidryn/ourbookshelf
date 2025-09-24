@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甜糯梦幻电子书</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffb6c1; /* 淡粉色 */
+            --secondary-color: #d8bfd8; /* 淡紫色 */
+            --accent-color: #ff69b4; /* 亮粉色 */
+            --text-color: #6a5acd; /* 深紫色 */
+            --light-bg: #fff0f5; /* 淡粉背景 */
+            --border-color: #e6e6fa; /* 淡紫边框 */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Dancing Script', cursive;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+        
+        /* 花瓣雨效果 */
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffb6c1" d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9C21.55,9 22,9.45 22,10C22,10.55 21.55,11 21,11H16.53L16.4,12.21L14.2,17.15C14,17.65 13.5,18 12.86,18H8.5C7.7,18 7,17.27 7,16.5V10C7,9.45 7.45,9 8,9H9V7C9,5.34 10.34,4 12,4C13.66,4 15,5.34 15,7V9H21M5,14C3.9,14 3,14.9 3,16C3,17.1 3.9,18 5,18C6.1,18 7,17.1 7,16C7,14.9 6.1,14 5,14Z"/></svg>');
+            opacity: 0.7;
+            z-index: -1;
+        }
+        
+        /* 星星闪烁效果 */
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .book-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .book-selector select {
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            font-family: inherit;
+        }
+        
+        /* 笔记本样式 */
+        .notebook {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            position: relative;
+            min-height: 80vh;
+            border: 1px solid var(--border-color);
+        }
+        
+        .notebook::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 10px,
+                var(--border-color) 10px,
+                var(--border-color) 12px
+            );
+        }
+        
+        /* 标题样式 */
+        h1 {
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        /* 封面区域 */
+        .cover-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .cover-image {
+            max-width: 200px;
+            max-height: 300px;
+            border-radius: 5px;
+            margin: 0 auto 15px;
+            display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .intro-box {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 80%;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .intro-box::before, .intro-box::after {
+            content: "❀";
+            position: absolute;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        
+        .intro-box::before {
+            top: -10px;
+            left: 10px;
+        }
+        
+        .intro-box::after {
+            bottom: -10px;
+            right: 10px;
+        }
+        
+        /* 章节列表 */
+        .chapters-section {
+            margin-top: 30px;
+        }
+        
+        .chapters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        
+        .chapters-header h2 {
+            font-family: 'Pacifico', cursive;
+            color: var(--accent-color);
+        }
+        
+        .chapter-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease;
+        }
+        
+        .chapter-list.collapsed {
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .chapter-item {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            border-left: 3px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        
+        .chapter-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chapter-info {
+            flex-grow: 1;
+        }
+        
+        .chapter-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .chapter-date {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        .chapter-tag {
+        	display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            background-color: var(--secondary-color);
+        }
+        
+        .chapter-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .chapter-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .chapter-actions button:hover {
+            transform: scale(1.2);
+            background-color: rgba(255, 182, 193, 0.2);
+        }
+        
+        /* 章节内容展示区域 */
+        .chapter-content-display {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .chapter-content-display.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chapter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--border-color);
+        }
+        
+        .chapter-meta {
+            flex-grow: 1;
+        }
+        
+        .display-chapter-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        .display-chapter-date {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        
+        .chapter-content-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+        
+        .chapter-highlight {
+            background-color: var(--light-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .chapter-highlight h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .chapter-image-preview {
+        	text-align: center;
+            margin: 20px 0;
+        }
+        
+        .chapter-image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .close-chapter {
+            background: linear-gradient(135deg, #ffb6c1, #ffc6d0);
+            color: #8a2be2;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .close-chapter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
+        }
+        
+        /* 按钮样式 - 更柔和的粉色 */
+        .btn {
+            background: linear-gradient(135deg, #ffb6c1, #ffc6d0);
+            color: #8a2be2;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 182, 193, 0.5);
+            background: linear-gradient(135deg, #ffc6d0, #ffd6e0);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 182, 193, 0.4);
+        }
+        
+        /* 编辑区域 */
+        .editor-section {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .editor-section.active {
+            display: block;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .editor-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .theme-selector {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .theme-option {
+        	width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .theme-option.active {
+            border-color: var(--text-color);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-family: inherit;
+            resize: vertical;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .highlight-section {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: var(--light-bg);
+            border-radius: 5px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        /* 功能按钮区域 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+        
+        .background-options {
+        	display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .bg-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .bg-option.active {
+            border-color: var(--accent-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .notebook {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .top-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .chapter-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .chapter-actions {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 花瓣雨和星星效果 -->
+    <div id="effects-container"></div>
+    
+    <!-- 顶部导航栏 -->
+    <div class="top-nav">
+        <div class="book-selector">
+            <label for="book-select">选择书籍:</label>
+            <select id="book-select"></select>
+            <button id="new-book" class="btn">新建书籍</button>
+            <button id="delete-book" class="btn">删除书籍</button>
+        </div>
+        <button id="customize-bg" class="btn">自定义背景</button>
+    </div>
+    
+    <div class="container">
+        <div class="notebook">
+            <!-- 封面区域 -->
+            <section class="cover-section">
+                <h1 id="book-title">我的甜糯日记</h1>
+                <img id="cover-image" src="" alt="书籍封面" class="cover-image">
+                <div class="intro-box">
+                    <p id="book-intro">这是一本记录甜蜜时光的梦幻日记...</p>
+                </div>
+                <button id="change-cover" class="btn">更换封面</button>
+                <button id="edit-intro" class="btn">编辑简介</button>
+            </section>
+            
+            <!-- 章节内容展示区域 -->
+            <section id="chapter-content-display" class="chapter-content-display">
+                <div class="chapter-header">
+                    <div class="chapter-meta">
+                        <h2 class="display-chapter-title" id="display-chapter-title">章节标题</h2>
+                        <div class="display-chapter-date" id="display-chapter-date">写作日期</div>
+                        <span class="chapter-tag" id="display-chapter-tag">🌸温柔</span>
+                    </div>
+                    <button class="close-chapter">关闭</button>
+                </div>
+                
+                <div id="display-chapter-image" class="chapter-image-preview"></div>
+                
+                <div class="chapter-content-text" id="display-chapter-content">
+                    章节内容将在这里显示...
+                </div>
+                
+                <div id="display-chapter-highlight" class="chapter-highlight" style="display: none;">
+                    <h4>🌟 我最喜欢的一段话</h4>
+                    <p id="display-highlight-text"></p>
+                </div>
+            </section>
+            
+            <!-- 章节区域 -->
+            	<section class="chapters-section">
+                <div class="chapters-header">
+                    <h2>📖 章节列表</h2>
+                    <button id="toggle-chapters" class="btn">折叠/展开</button>
+                </div>
+                <ul id="chapter-list" class="chapter-list">
+                    <!-- 章节将通过JS动态添加 -->
+                </ul>
+                <button id="add-chapter" class="btn">添加新章节</button>
+            </section>
+            
+            <!-- 编辑区域 -->
+            <section id="editor-section" class="editor-section">
+                <div class="editor-header">
+                    <h2 id="editor-title">编辑章节</h2>
+                    <button id="close-editor" class="btn">关闭</button>
+                </div>
+                
+                <div class="editor-controls">
+                    <div>
+                        <label for="chapter-date">写作日期:</label>
+                        <input type="date" id="chapter-date">
+                    </div>
+                    
+                    <div class="theme-selector">
+                        <span>主题色:</span>
+                        <div class="theme-option active" data-color="pink" style="background-color: #ffb6c1;"></div>
+                        <div class="theme-option" data-color="blue" style="background-color: #add8e6;"></div>
+                        <div class="theme-option" data-color="purple" style="background-color: #d8bfd8;"></div>
+                    </div>
+                    
+                    <div>
+                        <label for="chapter-tag">感情标签:</label>
+                        <select id="chapter-tag">
+                            <option value="🌸温柔">🌸温柔</option>
+                            <option value="🔥激烈">🔥激烈</option>
+                            <option value="😳羞耻">😳羞耻</option>
+                            <option value="💔争吵">💔争吵</option>
+                            <option value="🌟甜蜜">🌟甜蜜</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <input type="text" id="chapter-title-input" placeholder="章节标题..." style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+                
+                <textarea id="chapter-content" placeholder="写下你的故事..."></textarea>
+                
+                <div class="highlight-section">
+                    <h3>🌟 我最喜欢的一段话</h3>
+                    <textarea id="highlight-text" placeholder="摘录你最喜欢的一段话..." style="min-height: 80px;"></textarea>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <label for="chapter-music">背景音乐 (MP3链接):</label>
+                    <input type="text" id="chapter-music" placeholder="https://..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 5px;">
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <label for="chapter-image">章节插图:</label>
+                    <input type="file" id="chapter-image" accept="image/*">
+                    <div id="image-preview" style="margin-top: 10px;"></div>
+                </div>
+                
+                <button id="save-chapter" class="btn" style="margin-top: 15px;">保存章节</button>
+            </section>
+            
+            <!-- 功能按钮区域 -->
+            	<div class="action-buttons">
+                <button id="export-pdf" class="btn">导出为PDF</button>
+                <button id="export-txt" class="btn">导出为TXT</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 新建书籍模态框 -->
+    <div id="new-book-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>创建新书籍</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="new-book-title">书籍标题:</label>
+                <input type="text" id="new-book-title" placeholder="请输入书籍标题">
+            </div>
+            <div class="form-group">
+                <label for="new-book-intro">书籍简介:</label>
+                <textarea id="new-book-intro" placeholder="请输入书籍简介"></textarea>
+            </div>
+            <button id="create-book" class="btn">创建</button>
+        </div>
+    </div>
+    
+    <!-- 自定义背景模态框 -->
+    <div id="bg-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>自定义背景</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>背景类型:</label>
+                <select id="bg-type">
+                    <option value="color">纯色</option>
+                    <option value="image">图片</option>
+                    <option value="gradient">渐变</option>
+                </select>
+            </div>
+            
+            <div id="color-options" class="form-group">
+                <label>选择颜色:</label>
+                <input type="color" id="bg-color" value="#fff0f5">
+                <div class="background-options">
+                    <div class="bg-option active" style="background-color: #fff0f5;" data-color="#fff0f5"></div>
+                    <div class="bg-option" style="background-color: #f0f8ff;" data-color="#f0f8ff"></div>
+                    <div class="bg-option" style="background-color: #f5f5dc;" data-color="#f5f5dc"></div>
+                    <div class="bg-option" style="background-color: #faf0e6;" data-color="#faf0e6"></div>
+                </div>
+            </div>
+            
+            <div id="image-options" class="form-group" style="display: none;">
+                <label>上传背景图片:</label>
+                <input type="file" id="bg-image" accept="image/*">
+                <div class="background-options">
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'); background-size: cover;"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'); background-size: cover;"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1495195129352-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'); background-size: cover;"></div>
+                </div>
+            </div>
+            
+            <div id="gradient-options" class="form-group" style="display: none;">
+                <label>选择渐变:</label>
+                <div class="background-options">
+                    <div class="bg-option active" style="background: linear-gradient(135deg, #ffb6c1, #d8bfd8);"></div>
+                    <div class="bg-option" style="background: linear-gradient(135deg, #a1c4fd, #c2e9fb);"></div>
+                    <div class="bg-option" style="background: linear-gradient(135deg, #d4fc79, #96e6a1);"></div>
+                    <div class="bg-option" style="background: linear-gradient(135deg, #fad0c4, #ffd1ff);"></div>
+                </div>
+            </div>
+            
+            <button id="apply-bg" class="btn">应用背景</button>
+        </div>
+    </div>
+
+    <script>
+        // 创建花瓣雨和星星效果
+        function createEffects() {
+            const effectsContainer = document.getElementById('effects-container');
+            
+            // 创建花瓣
+            for (let i = 0; i < 30; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.animationDelay = Math.random() * 5 + 's';
+                petal.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                effectsContainer.appendChild(petal);
+            }
+            
+            // 创建星星
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                effectsContainer.appendChild(star);
+            }
+        }
+        
+        // 电子书数据模型
+        let booksData = {
+            currentBookId: null,
+            books: []
+        };
+        
+        // 当前编辑的章节索引
+        let currentChapterIndex = -1;
+        
+        // 初始化应用
+        function initApp() {
+            createEffects();
+            loadBooksData();
+            setupEventListeners();
+            renderBooksSelector();
+            
+            // 如果没有书籍，创建一个默认书籍
+            if (booksData.books.length === 0) {
+                createDefaultBook();
+            } else {
+                // 加载当前选中的书籍
+                const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+                if (currentBook) {
+                    loadBook(currentBook);
+                } else {
+                    // 如果没有当前选中的书籍，加载第一本书
+                    loadBook(booksData.books[0]);
+                    booksData.currentBookId = booksData.books[0].id;
+                    saveBooksData();
+                }
+            }
+        }
+        
+        // 创建默认书籍
+        function createDefaultBook() {
+            const defaultBook = {
+                id: generateId(),
+                title: "我的甜糯日记",
+                intro: "这是一本记录甜蜜时光的梦幻日记...",
+                cover: "",
+                chapters: [],
+                background: {
+                    type: "color",
+                    value: "#fff0f5"
+                }
+            };
+            
+            booksData.books.push(defaultBook);
+            booksData.currentBookId = defaultBook.id;
+            saveBooksData();
+            loadBook(defaultBook);
+        }
+        
+        // 从本地存储加载数据
+        function loadBooksData() {
+            const savedData = localStorage.getItem('sweetDreamBooks');
+            if (savedData) {
+                booksData = JSON.parse(savedData);
+            }
+        }
+        
+        // 保存数据到本地存储
+        function saveBooksData() {
+            localStorage.setItem('sweetDreamBooks', JSON.stringify(booksData));
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 书籍管理
+            document.getElementById('book-select').addEventListener('change', switchBook);
+            document.getElementById('new-book').addEventListener('click', showNewBookModal);
+            document.getElementById('delete-book').addEventListener('click', deleteCurrentBook);
+            document.getElementById('create-book').addEventListener('click', createNewBook);
+            
+            // 背景自定义
+            document.getElementById('customize-bg').addEventListener('click', showBgModal);
+            document.getElementById('apply-bg').addEventListener('click', applyBackground);
+            document.getElementById('bg-type').addEventListener('change', toggleBgOptions);
+            
+            // 封面和简介编辑
+            document.getElementById('change-cover').addEventListener('click', changeCover);
+            document.getElementById('edit-intro').addEventListener('click', editIntro);
+            
+            // 章节列表操作
+            document.getElementById('toggle-chapters').addEventListener('click', toggleChapters);
+            document.getElementById('add-chapter').addEventListener('click', addNewChapter);
+            
+            // 编辑器操作
+            document.getElementById('close-editor').addEventListener('click', closeEditor);
+            document.getElementById('save-chapter').addEventListener('click', saveChapter);
+            
+            // 章节展示操作
+            document.querySelector('.close-chapter').addEventListener('click', closeChapterDisplay);
+            
+            // 主题色选择
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 导出功能
+            document.getElementById('export-pdf').addEventListener('click', exportToPDF);
+            document.getElementById('export-txt').addEventListener('click', exportToTXT);
+            
+            // 图片预览
+            document.getElementById('chapter-image').addEventListener('change', previewImage);
+            
+            // 模态框关闭
+            document.querySelectorAll('.modal-close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // 背景选项点击
+            document.querySelectorAll('.bg-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    this.parentElement.querySelectorAll('.bg-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+        }
+        
+        // 渲染书籍选择器
+        function renderBooksSelector() {
+            const bookSelect = document.getElementById('book-select');
+            bookSelect.innerHTML = '';
+            
+            booksData.books.forEach(book => {
+                const option = document.createElement('option');
+                option.value = book.id;
+                option.textContent = book.title;
+                if (book.id === booksData.currentBookId) {
+                    option.selected = true;
+                }
+                bookSelect.appendChild(option);
+            });
+        }
+        
+        // 加载书籍
+        function loadBook(book) {
+            document.getElementById('book-title').textContent = book.title;
+            document.getElementById('book-intro').textContent = book.intro;
+            
+            if (book.cover) {
+                document.getElementById('cover-image').src = book.cover;
+            } else {
+                document.getElementById('cover-image').src = '';
+            }
+            
+            // 应用背景
+            applyBookBackground(book);
+            
+            // 渲染章节
+            renderChapters(book.chapters);
+            
+            // 关闭章节展示
+            closeChapterDisplay();
+            
+            booksData.currentBookId = book.id;
+            saveBooksData();
+            renderBooksSelector();
+        }
+        
+        // 应用书籍背景
+        function applyBookBackground(book) {
+            if (book.background) {
+                const body = document.body;
+                
+                switch(book.background.type) {
+                    case 'color':
+                        body.style.background = book.background.value;
+                        break;
+                    case 'image':
+                        body.style.background = `url('${book.background.value}') no-repeat center center fixed`;
+                        body.style.backgroundSize = 'cover';
+                        break;
+                    case 'gradient':
+                        body.style.background = book.background.value;
+                        break;
+                }
+            }
+        }
+        
+        // 切换书籍
+        function switchBook() {
+            const bookId = document.getElementById('book-select').value;
+            const book = booksData.books.find(b => b.id === bookId);
+            if (book) {
+                loadBook(book);
+            }
+        }
+        
+        // 显示新建书籍模态框
+        function showNewBookModal() {
+            document.getElementById('new-book-modal').style.display = 'flex';
+        }
+        
+        //创建新书籍
+        function createNewBook() {
+            const title = document.getElementById('new-book-title').value.trim();
+            const intro = document.getElementById('new-book-intro').value.trim();
+            
+            if (!title) {
+                alert('请输入书籍标题');
+                return;
+            }
+            
+            const newBook = {
+                id: generateId(),
+                title: title,
+                intro: intro || '暂无简介',
+                cover: "",
+                chapters: [],
+                background: {
+                    type: "color",
+                    value: "#fff0f5"
+                }
+            };
+            
+            booksData.books.push(newBook);
+            saveBooksData();
+            loadBook(newBook);
+            document.getElementById('new-book-modal').style.display = 'none';
+            
+            // 清空表单
+            document.getElementById('new-book-title').value = '';
+            document.getElementById('new-book-intro').value = '';
+        }
+        
+        // 删除当前书籍
+        function deleteCurrentBook() {
+            if (booksData.books.length <= 1) {
+                alert('至少需要保留一本书籍');
+                return;
+            }
+            
+            if (confirm('确定要删除这本书籍吗？此操作不可撤销。')) {
+                const currentIndex = booksData.books.findIndex(book => book.id === booksData.currentBookId);
+                booksData.books.splice(currentIndex, 1);
+                
+                // 加载另一本书籍
+                if (booksData.books.length > 0) {
+                    loadBook(booksData.books[0]);
+                } else {
+                    createDefaultBook();
+                }
+                
+                saveBooksData();
+            }
+        }
+        
+        // 显示背景自定义模态框
+        function showBgModal() {
+            document.getElementById('bg-modal').style.display = 'flex';
+            toggleBgOptions(); // 初始化显示正确的选项
+        }
+        
+        // 切换背景选项显示
+        function toggleBgOptions() {
+            const bgType = document.getElementById('bg-type').value;
+            
+            // 隐藏所有选项
+            document.getElementById('color-options').style.display = 'none';
+            document.getElementById('image-options').style.display = 'none';
+            document.getElementById('gradient-options').style.display = 'none';
+            
+            // 显示选中的选项
+            document.getElementById(`${bgType}-options`).style.display = 'block';
+        }
+        
+        // 应用背景
+        function applyBackground() {
+            const bgType = document.getElementById('bg-type').value;
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            
+            if (!currentBook) return;
+            
+            let bgValue = '';
+            
+            switch(bgType) {
+                case 'color':
+                    const colorOption = document.querySelector('#color-options .bg-option.active');
+                    bgValue = colorOption ? colorOption.getAttribute('data-color') : '#fff0f5';
+                    break;
+                    
+                case 'image':
+                    const imageFile = document.getElementById('bg-image').files[0];
+                    if (imageFile) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            bgValue = e.target.result;
+                            currentBook.background = { type: bgType, value: bgValue };
+                            saveBooksData();
+                            applyBookBackground(currentBook);
+                        };
+                        reader.readAsDataURL(imageFile);
+                        document.getElementById('bg-modal').style.display = 'none';
+                        return;
+                    } else {
+                        const imageOption = document.querySelector('#image-options .bg-option.active');
+                        if (imageOption) {
+                            bgValue = imageOption.style.backgroundImage.slice(5, -2); // 提取URL
+                        }
+                    }
+                    break;
+                    
+                case 'gradient':
+                    const gradientOption = document.querySelector('#gradient-options .bg-option.active');
+                    bgValue = gradientOption ? gradientOption.style.background : 'linear-gradient(135deg, #ffb6c1, #d8bfd8)';
+                    break;
+            }
+            
+            currentBook.background = { type: bgType, value: bgValue };
+            saveBooksData();
+            applyBookBackground(currentBook);
+            document.getElementById('bg-modal').style.display = 'none';
+        }
+        
+        // 更换封面
+        function changeCover() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+                        if (currentBook) {
+                            currentBook.cover = event.target.result;
+                            document.getElementById('cover-image').src = event.target.result;
+                            saveBooksData();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+        
+        // 编辑简介
+        function editIntro() {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook) return;
+            
+            const newIntro = prompt('请输入新的简介:', currentBook.intro);
+            if (newIntro !== null) {
+                currentBook.intro = newIntro;
+                document.getElementById('book-intro').textContent = newIntro;
+                saveBooksData();
+            }
+        }
+        
+        // 切换章节列表显示
+        function toggleChapters() {
+            document.getElementById('chapter-list').classList.toggle('collapsed');
+        }
+        
+        // 渲染章节列表
+        function renderChapters(chapters) {
+            const chapterList = document.getElementById('chapter-list');
+            chapterList.innerHTML = '';
+            
+            if (!chapters || chapters.length === 0) {
+                chapterList.innerHTML = '<li style="text-align: center; padding: 20px; color: #888;">暂无章节，点击"添加新章节"开始创作</li>';
+                return;
+            }
+            
+            chapters.forEach((chapter, index) => {
+                const li = document.createElement('li');
+                li.className = 'chapter-item';
+                
+                li.innerHTML = `
+                    <div class="chapter-info">
+                        <div class="chapter-title">
+                            <span>📖</span> ${chapter.title}
+                        </div>
+                        <div class="chapter-date">${chapter.date}</div>
+                        <span class="chapter-tag">${chapter.tag}</span>
+                    </div>
+                    <div class="chapter-actions">
+                        <button class="view-btn" data-index="${index}" title="查看章节">👁️</button>
+                        <button class="edit-btn" data-index="${index}" title="编辑章节">✏️</button>
+                        <button class="delete-btn" data-index="${index}" title="删除章节">🗑️</button>
+                    </div>
+                `;
+                
+                chapterList.appendChild(li);
+            });
+            
+            // 添加查看事件
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡
+                    viewChapter(parseInt(this.getAttribute('data-index')));
+                });
+            });
+            
+            // 添加编辑事件
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡
+                    editChapter(parseInt(this.getAttribute('data-index')));
+                });
+            });
+            
+            // 添加删除事件
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡
+                    deleteChapter(parseInt(this.getAttribute('data-index')));
+                });
+            });
+            
+            // 点击章节项也可以查看
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const index = parseInt(this.querySelector('.view-btn').getAttribute('data-index'));
+                    viewChapter(index);
+                });
+            });
+        }
+        
+        // 查看章节内容
+        function viewChapter(index) {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook || !currentBook.chapters || !currentBook.chapters[index]) return;
+            
+            const chapter = currentBook.chapters[index];
+            
+            // 填充章节内容
+            document.getElementById('display-chapter-title').textContent = chapter.title;
+            document.getElementById('display-chapter-date').textContent = `写作日期: ${chapter.date}`;
+            document.getElementById('display-chapter-tag').textContent = chapter.tag;
+            document.getElementById('display-chapter-content').textContent = chapter.content;
+            
+            // 处理高亮内容
+            const highlightSection = document.getElementById('display-chapter-highlight');
+            if (chapter.highlight && chapter.highlight.trim() !== '') {
+                highlightSection.style.display = 'block';
+                document.getElementById('display-highlight-text').textContent = chapter.highlight;
+            } else {
+                highlightSection.style.display = 'none';
+            }
+            
+            // 处理章节图片
+            const imageContainer = document.getElementById('display-chapter-image');
+            if (chapter.image) {
+                imageContainer.innerHTML = `<img src="${chapter.image}" alt="章节插图">`;
+            } else {
+                imageContainer.innerHTML = '';
+            }
+            
+            // 显示章节内容区域
+            document.getElementById('chapter-content-display').classList.add('active');
+            
+            // 滚动到章节内容区域
+            document.getElementById('chapter-content-display').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+        
+        // 关闭章节展示
+        function closeChapterDisplay() {
+            document.getElementById('chapter-content-display').classList.remove('active');
+        }
+        
+        // 添加新章节
+        function addNewChapter() {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook) return;
+            
+            currentChapterIndex = -1; // 新章节
+            document.getElementById('editor-title').textContent = '添加新章节';
+            document.getElementById('chapter-title-input').value = '';
+            document.getElementById('chapter-content').value = '';
+            document.getElementById('highlight-text').value = '';
+            document.getElementById('chapter-music').value = '';
+            document.getElementById('chapter-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('image-preview').innerHTML = '';
+            document.getElementById('chapter-image').value = ''; // 清空文件输入
+            
+            // 关闭章节展示，打开编辑器
+            closeChapterDisplay();
+            document.getElementById('editor-section').classList.add('active');
+        }
+        
+        // 编辑章节
+        function editChapter(index) {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook || !currentBook.chapters || !currentBook.chapters[index]) return;
+            
+            currentChapterIndex = index;
+            const chapter = currentBook.chapters[index];
+            
+            document.getElementById('editor-title').textContent = '编辑章节';
+            document.getElementById('chapter-title-input').value = chapter.title || '';
+            document.getElementById('chapter-content').value = chapter.content || '';
+            document.getElementById('highlight-text').value = chapter.highlight || '';
+            document.getElementById('chapter-music').value = chapter.music || '';
+            document.getElementById('chapter-date').value = chapter.date || new Date().toISOString().split('T')[0];
+            document.getElementById('chapter-tag').value = chapter.tag || '🌸温柔';
+            
+            if (chapter.image) {
+                document.getElementById('image-preview').innerHTML = `<img src="${chapter.image}" style="max-width: 200px; border-radius: 5px;">`;
+            } else {
+                document.getElementById('image-preview').innerHTML = '';
+            }
+            
+            // 关闭章节展示，打开编辑器
+            closeChapterDisplay();
+            document.getElementById('editor-section').classList.add('active');
+        }
+        
+        // 关闭编辑器
+        function closeEditor() {
+            document.getElementById('editor-section').classList.remove('active');
+        }
+        
+        // 保存章节
+        function saveChapter() {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook) {
+                alert('错误：找不到当前书籍');
+                return;
+            }
+            
+            const title = document.getElementById('chapter-title-input').value.trim();
+            const content = document.getElementById('chapter-content').value.trim();
+            const date = document.getElementById('chapter-date').value;
+            const tag = document.getElementById('chapter-tag').value;
+            const highlight = document.getElementById('highlight-text').value.trim();
+            const music = document.getElementById('chapter-music').value.trim();
+            
+            if (!title) {
+                alert('请填写章节标题');
+                return;
+            }
+            
+            if (!content) {
+                alert('请填写章节内容');
+                return;
+            }
+            
+            if (!date) {
+                alert('请选择写作日期');
+                return;
+            }
+            
+            // 确保chapters数组存在
+            if (!currentBook.chapters) {
+                currentBook.chapters = [];
+            }
+            
+            const chapterData = {
+                title,
+                content,
+                date,
+                tag,
+                highlight,
+                music
+            };
+            
+            // 如果有图片预览，保存图片数据
+            const imagePreview = document.getElementById('image-preview').querySelector('img');
+            if (imagePreview) {
+                chapterData.image = imagePreview.src;
+            }
+            
+            if (currentChapterIndex === -1) {
+                // 新章节 - 添加到数组开头
+                currentBook.chapters.unshift(chapterData);
+            } else {
+                // 编辑现有章节
+                currentBook.chapters[currentChapterIndex] = chapterData;
+            }
+            
+            saveBooksData();
+            renderChapters(currentBook.chapters);
+            closeEditor();
+            
+            alert('章节已保存!');
+        }
+        
+        // 删除章节
+        function deleteChapter(index) {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook || !currentBook.chapters || !currentBook.chapters[index]) return;
+            
+            if (confirm('确定要删除这个章节吗？')) {
+                currentBook.chapters.splice(index, 1);
+                saveBooksData();
+                renderChapters(currentBook.chapters);
+                closeChapterDisplay(); // 如果删除的是当前查看的章节，关闭展示
+            }
+        }
+        
+        // 图片预览
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('image-preview').innerHTML = `<img src="${e.target.result}" style="max-width: 200px; border-radius: 5px;">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('image-preview').innerHTML = '';
+            }
+        }
+        
+        // 导出为PDF（简化版）
+        function exportToPDF() {
+            alert('PDF导出功能需要后端支持或使用专门的库（如jsPDF）实现。这是一个简化演示。');
+            // 实际实现可以使用jsPDF库
+        }
+        
+        // 导出为TXT
+        function exportToTXT() {
+            const currentBook = booksData.books.find(book => book.id === booksData.currentBookId);
+            if (!currentBook) return;
+            
+            let txtContent = `${currentBook.title}\n\n${currentBook.intro}\n\n`;
+            
+            if (currentBook.chapters && currentBook.chapters.length > 0) {
+                currentBook.chapters.forEach(chapter => {
+                    txtContent += `# ${chapter.title} (${chapter.date}) [${chapter.tag}]\n\n`;
+                    txtContent += `${chapter.content}\n\n`;
+                    
+                    if (chapter.highlight) {
+                        txtContent += `🌟 最喜欢的一段话: ${chapter.highlight}\n\n`;
+                    }
+                    
+                    txtContent += '---\n\n';
+                });
+            } else {
+                txtContent += '暂无章节内容\n\n';
+            }
+            
+            const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentBook.title.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // 生成唯一ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
+```
